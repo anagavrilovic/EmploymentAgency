@@ -30,6 +30,7 @@ public class Candidate extends BaseEntity {
     @Column(nullable = false)
     private String phoneNumber;
 
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private EducationDegree educationDegree;
 

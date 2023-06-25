@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.example.employmentagencybackend.service.AmazonS3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -15,8 +16,11 @@ import java.util.Optional;
 @Service
 public class AmazonS3ServiceImpl implements AmazonS3Service {
 
-    @Autowired
-    private AmazonS3 amazonS3;
+    private final AmazonS3 amazonS3;
+
+    public AmazonS3ServiceImpl(AmazonS3 amazonS3) {
+        this.amazonS3 = amazonS3;
+    }
 
     @Override
     public PutObjectResult upload(String path, String fileName, Optional<Map<String, String>> optionalMetaData, InputStream inputStream) {

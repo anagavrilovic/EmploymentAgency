@@ -1,6 +1,5 @@
 package com.example.employmentagencybackend.controller;
 
-import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.model.S3Object;
 import com.example.employmentagencybackend.dto.CandidateCreationDto;
 import com.example.employmentagencybackend.model.Candidate;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 

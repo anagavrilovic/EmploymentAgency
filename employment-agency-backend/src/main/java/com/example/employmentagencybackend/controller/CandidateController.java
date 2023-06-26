@@ -7,10 +7,8 @@ import com.example.employmentagencybackend.service.CandidateService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,19 +38,18 @@ public class CandidateController {
         return candidateService.findById(id);
     }
 
-    @GetMapping("download/{id}/{fileType}")
+    @GetMapping("download/{id}/cv")
     @ResponseBody
-    public HttpEntity<byte[]> download(@PathVariable("id") Long id, @PathVariable("fileType") String fileType,
-                                       HttpServletResponse response) throws IOException {
-
-        S3Object s3Object = getS3Object(id, fileType);
+    public HttpEntity<byte[]> downloadCv(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        S3Object s3Object = candidateService.downloadCv(id);
         return createHttpEntity(s3Object);
     }
 
-    private S3Object getS3Object(Long id, String fileType) {
-        if(fileType.equals("cv")) return candidateService.downloadCv(id);
-        else if(fileType.equals("motivationalLetter")) return candidateService.downloadMotivationalLetter(id);
-        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File type not supported.");
+    @GetMapping("download/{id}/motivationalLetter")
+    @ResponseBody
+    public HttpEntity<byte[]> downloadMotivationalLetter(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        S3Object s3Object = candidateService.downloadMotivationalLetter(id);
+        return createHttpEntity(s3Object);
     }
 
     private static HttpEntity<byte[]> createHttpEntity(S3Object s3Object) throws IOException {

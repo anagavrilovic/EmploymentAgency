@@ -35,7 +35,11 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         return amazonS3.putObject(path, fileName, inputStream, objectMetadata);
     }
 
-    public S3Object download(String path, String fileName) {
+    public S3Object download(String fullPath) {
+        String[] spl = fullPath.split("/");
+        String path = spl[0] + "/" + spl[1];
+        String fileName = spl[2];
+
         return amazonS3.getObject(path, fileName);
     }
 }

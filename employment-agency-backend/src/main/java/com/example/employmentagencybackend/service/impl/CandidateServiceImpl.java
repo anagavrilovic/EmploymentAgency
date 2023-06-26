@@ -1,6 +1,6 @@
 package com.example.employmentagencybackend.service.impl;
 
-import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
 import com.example.employmentagencybackend.dto.CandidateCreationDto;
 import com.example.employmentagencybackend.mapper.CandidateMapper;
 import com.example.employmentagencybackend.model.Candidate;
@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CandidateServiceImpl implements CandidateService {
@@ -46,11 +43,37 @@ public class CandidateServiceImpl implements CandidateService {
         String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
         String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
 
-
         Candidate candidate = CandidateMapper.mapCandidateCreationDtoToCandidate(candidateCreationDto);
         candidate.setCv(cvFullPath);
         candidate.setMotivationalLetter(motivationalLetterFullPath);
         return candidateRepository.save(candidate);
+    }
+
+    @Override
+    public List<Candidate> findAll() {
+        return candidateRepository.findAll();
+    }
+
+    @Override
+    public Candidate findById(Long id) {
+        return candidateRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidate with this id not found"));
+    }
+
+    @Override
+    public S3Object downloadCv(Long id) {
+        Candidate candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidate with this id not found"));
+
+        return amazonS3Service.download(candidate.getCv());
+    }
+
+    @Override
+    public S3Object downloadMotivationalLetter(Long id) {
+        Candidate candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidate with this id not found"));
+
+        return amazonS3Service.download(candidate.getMotivationalLetter());
     }
 
     private String uploadFileToS3(MultipartFile file, String directory) throws IOException {
@@ -59,7 +82,7 @@ public class CandidateServiceImpl implements CandidateService {
         metadata.put("Content-Length", String.valueOf(file.getSize()));
 
         String path = String.format("%s/%s", bucketName, directory);
-        String fileName = String.format("%s", file.getOriginalFilename());
+        String fileName = String.format("%s.pdf", UUID.randomUUID());
 
         // Uploading file to s3
         amazonS3Service.upload(path, fileName, Optional.of(metadata), file.getInputStream());

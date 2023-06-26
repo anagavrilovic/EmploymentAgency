@@ -11,6 +11,6 @@ public interface AmazonS3Service {
 
     public PutObjectResult upload(String path, String fileName, Optional<Map<String, String>> optionalMetaData, InputStream inputStream);
 
-    public S3Object download(String path, String fileName);
+    public S3Object download(String fullPath);
 
 }

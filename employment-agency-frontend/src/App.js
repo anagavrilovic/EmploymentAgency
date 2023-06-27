@@ -1,25 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
 
+import { useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+
+import Homepage from './pages/Homepage/Homepage';
+import RegisterCandidate from './pages/RegisterCandidate/RegisterCandidate';
+import Candidates from './pages/Candidates/Candidates';
+import Search from './pages/Search/Search';
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div className="App">
+			<Routes>
+				<Route path='/' element={ <Homepage /> } />
+				<Route path='/register' element={ <RegisterCandidate /> } />
+				<Route path='/candidates' element={ <Candidates /> } />
+				<Route path='/search' element={ <Search /> } />
+			</Routes>
+		</div>
+	);
 }
 
 export default App;

@@ -33,6 +33,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         return amazonS3.putObject(path, fileName, inputStream, objectMetadata);
     }
 
+    @Override
     public S3Object download(String fullPath) {
         String[] spl = fullPath.split("/");
         String path = spl[0] + "/" + spl[1];

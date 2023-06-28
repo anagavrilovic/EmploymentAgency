@@ -36,6 +36,10 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate save(CandidateCreationDto candidateCreationDto) throws IOException {
+        candidateRepository.findByEmail(candidateCreationDto.getEmail())
+                .ifPresent(e -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email already exists.");
+                });
 
         if (candidateCreationDto.getCv().isEmpty() || candidateCreationDto.getMotivationalLetter().isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot upload empty file");

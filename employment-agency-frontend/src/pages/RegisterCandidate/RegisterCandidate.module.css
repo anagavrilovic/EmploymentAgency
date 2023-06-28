@@ -22,7 +22,6 @@
     color: white;
     font-weight: normal;
     font-size: 2.5rem;
-    margin-top: 5rem;
     margin-bottom: 0.5rem;
 }
 
@@ -55,7 +54,7 @@
 }
 
 .form {
-    margin: 3rem;
+    margin: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;

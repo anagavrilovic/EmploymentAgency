@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CandidateService {
 
-    Candidate save(CandidateCreationDto candidateCreationDto) throws IOException;
+    Candidate register(CandidateCreationDto candidateCreationDto) throws IOException;
 
     List<Candidate> findAll();
 

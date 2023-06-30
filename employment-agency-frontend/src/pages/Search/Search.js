@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,8 +10,6 @@ function Search() {
 
     const [mandatorySearchInput, setMandatorySearchInput] = useState({text: "", parameter: ""});
     const [optionalSearchInputs, setOptionalSearchInputs] = useState([]);
-
-    //useEffect(() => { console.log(mandatorySearchInput) }, [mandatorySearchInput])
 
     const navigate = useNavigate();
 

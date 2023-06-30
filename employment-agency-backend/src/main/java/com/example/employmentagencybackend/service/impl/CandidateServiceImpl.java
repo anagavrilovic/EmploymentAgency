@@ -6,7 +6,11 @@ import com.example.employmentagencybackend.mapper.CandidateMapper;
 import com.example.employmentagencybackend.model.Candidate;
 import com.example.employmentagencybackend.repository.CandidateRepository;
 import com.example.employmentagencybackend.service.AmazonS3Service;
+import com.example.employmentagencybackend.service.CandidateIndexingService;
 import com.example.employmentagencybackend.service.CandidateService;
+import com.example.employmentagencybackend.service.PdfReaderService;
+import com.example.employmentagencybackend.util.PDFReader;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,31 +30,32 @@ public class CandidateServiceImpl implements CandidateService {
     private String bucketName;
 
     private final AmazonS3Service amazonS3Service;
-
     private final CandidateRepository candidateRepository;
+    private final CandidateIndexingService candidateIndexingService;
 
-    public CandidateServiceImpl(AmazonS3Service amazonS3Service, CandidateRepository candidateRepository) {
+    public CandidateServiceImpl(AmazonS3Service amazonS3Service, CandidateRepository candidateRepository, CandidateIndexingService candidateIndexingService) {
         this.amazonS3Service = amazonS3Service;
         this.candidateRepository = candidateRepository;
+        this.candidateIndexingService = candidateIndexingService;
     }
 
     @Override
-    public Candidate save(CandidateCreationDto candidateCreationDto) throws IOException {
-        candidateRepository.findByEmail(candidateCreationDto.getEmail())
-                .ifPresent(e -> {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email already exists.");
-                });
+    public Candidate register(CandidateCreationDto candidateCreationDto) throws IOException {
+        assertCandidateNotExists(candidateCreationDto);
+        assertFilesNotEmpty(candidateCreationDto);
 
-        if (candidateCreationDto.getCv().isEmpty() || candidateCreationDto.getMotivationalLetter().isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot upload empty file");
+        //String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
+        //String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
+        String cvFullPath = "";
+        String motivationalLetterFullPath = "";
 
-        String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
-        String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
+        Candidate candidate = save(candidateCreationDto, cvFullPath, motivationalLetterFullPath);
 
-        Candidate candidate = CandidateMapper.mapCandidateCreationDtoToCandidate(candidateCreationDto);
-        candidate.setCv(cvFullPath);
-        candidate.setMotivationalLetter(motivationalLetterFullPath);
-        return candidateRepository.save(candidate);
+        String cvContent = PDFReader.getPdfContent(candidateCreationDto.getCv());
+        String motivationalLetterContent = PDFReader.getPdfContent(candidateCreationDto.getMotivationalLetter());
+        candidateIndexingService.addCandidate(candidate, cvContent, motivationalLetterContent);
+
+        return candidate;
     }
 
     @Override
@@ -78,6 +83,25 @@ public class CandidateServiceImpl implements CandidateService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidate with this id not found"));
 
         return amazonS3Service.download(candidate.getMotivationalLetter());
+    }
+
+    private void assertCandidateNotExists(CandidateCreationDto candidateCreationDto) {
+        candidateRepository.findByEmail(candidateCreationDto.getEmail())
+                .ifPresent(e -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email already exists.");
+                });
+    }
+
+    private void assertFilesNotEmpty(CandidateCreationDto candidateCreationDto) {
+        if (candidateCreationDto.getCv().isEmpty() || candidateCreationDto.getMotivationalLetter().isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot upload empty file");
+    }
+
+    private Candidate save(CandidateCreationDto candidateCreationDto, String cvFullPath, String motivationalLetterFullPath) {
+        Candidate candidate = CandidateMapper.mapCandidateCreationDtoToCandidate(candidateCreationDto);
+        candidate.setCv(cvFullPath);
+        candidate.setMotivationalLetter(motivationalLetterFullPath);
+        return candidateRepository.save(candidate);
     }
 
     private String uploadFileToS3(MultipartFile file, String directory) throws IOException {

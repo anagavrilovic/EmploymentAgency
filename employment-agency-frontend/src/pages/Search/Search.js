@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,22 +11,38 @@ function Search() {
     const [mandatorySearchInput, setMandatorySearchInput] = useState({text: "", parameter: ""});
     const [optionalSearchInputs, setOptionalSearchInputs] = useState([]);
 
+    //useEffect(() => { console.log(mandatorySearchInput) }, [mandatorySearchInput])
+
     const navigate = useNavigate();
 
     function goToHomepage() {
         navigate("/");
     }
 
+    function handleMandatorySearchInputChange(event) {
+        setMandatorySearchInput({...mandatorySearchInput, "text": event.target.value});
+    }
+
     function handleSelectMandatorySearchField(event) {
-
+        setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value});
     }
 
-    function handleSelectOperation(event) {
-
+    function handleSelectOperation(event, searchInput, index) {
+        let newArray = [...optionalSearchInputs]; 
+        newArray[index] = {...searchInput, "operation": event.target.value }; 
+        setOptionalSearchInputs(newArray);
     }
 
-    function handleSelectOptionalSearchField(event) {
+    function handleOptionalSearchInputChange(event, searchInput, index) {
+        let newArray = [...optionalSearchInputs]; 
+        newArray[index] = {...searchInput, "text": event.target.value }; 
+        setOptionalSearchInputs(newArray);
+    }
 
+    function handleSelectOptionalSearchField(event, searchInput, index) {
+        let newArray = [...optionalSearchInputs]; 
+        newArray[index] = {...searchInput, "parameter": event.target.value }; 
+        setOptionalSearchInputs(newArray);
     }
 
     function handleClickRemoveOptional(searchInput) {
@@ -38,7 +54,7 @@ function Search() {
         var newField = {
             id: uuidv4(),
             operation: "AND",
-            input: "",
+            text: "",
             parameter: ""
         }; 
         console.log(newField);
@@ -47,11 +63,12 @@ function Search() {
     }
 
     function handleClickClearFields() {
-
+        setMandatorySearchInput({text: "", parameter: ""});
+        setOptionalSearchInputs([]);
     }
 
     function handleClickSearch() {
-
+        
     }
 
     return (
@@ -69,8 +86,8 @@ function Search() {
 
                 <div className={classes.form}>
                     <div className={classes.mandatorySearchParam}>
-                        <input type="text" className={classes.mandatorySearchInput} />
-                        <select name="Field" defaultValue="" className={classes.mandatorySearchSelect} onChange={handleSelectMandatorySearchField} >
+                        <input type="text" value={mandatorySearchInput.text} className={classes.mandatorySearchInput} onChange={handleMandatorySearchInputChange}/>
+                        <select name="Field" defaultValue={mandatorySearchInput.parameter} className={classes.mandatorySearchSelect} onChange={handleSelectMandatorySearchField} >
                             <option value="" disabled>Choose Parameter</option>
                             <option value="FirstName" >First Name</option>
                             <option value="LastName" >Last Name</option>
@@ -82,12 +99,13 @@ function Search() {
 
                     {optionalSearchInputs.map((s, index) => ( 
                         <div className={classes.optionalSearchParam} key={index}> 
-                            <select name="Operation" defaultValue="AND" className={classes.operationSelect} onChange={handleSelectOperation} >
+                            <select name="Operation" defaultValue={s.operation} className={classes.operationSelect} onChange={e => handleSelectOperation(e, s, index)} >
                                 <option value="AND" >AND</option>
                                 <option value="OR" >OR</option>
                             </select>
-                            <input type="text" className={classes.optionalSearchInput} />
-                            <select name="Field" defaultValue="" className={classes.optionalSearchSelect} onChange={handleSelectOptionalSearchField} >
+                            <input type="text" value={s.text} 
+                                className={classes.optionalSearchInput} onChange={e => handleOptionalSearchInputChange(e, s, index)}/>
+                            <select name="Field" defaultValue={s.parameter} className={classes.optionalSearchSelect} onChange={e => handleSelectOptionalSearchField(e, s, index)} >
                                 <option value="" disabled>Choose Parameter</option>
                                 <option value="FirstName" >First Name</option>
                                 <option value="LastName" >Last Name</option>

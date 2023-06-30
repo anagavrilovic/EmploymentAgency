@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.example.employmentagencybackend.repository")
 @ComponentScan(basePackages = { "com.example.employmentagencybackend.service" })
-public class ElasticSearchClientConfiguration  extends AbstractElasticsearchConfiguration {
+public class ElasticSearchClientConfiguration extends AbstractElasticsearchConfiguration {
 
     @Value("${spring.elasticsearch.url}")
     private String elasticsearchUrl;

@@ -4,28 +4,26 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.example.employmentagencybackend.dto.CandidateCreationDto;
 import com.example.employmentagencybackend.model.Candidate;
 import com.example.employmentagencybackend.service.CandidateService;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("candidate")
+@AllArgsConstructor
 public class CandidateController {
 
     private final CandidateService candidateService;
 
-    public CandidateController(CandidateService candidateService) {
-        this.candidateService = candidateService;
-    }
-
     @RequestMapping(method = RequestMethod.POST, consumes = { "multipart/form-data" })
-    public Candidate save(@ModelAttribute CandidateCreationDto candidateCreationDto) throws IOException {
-        return candidateService.save(candidateCreationDto);
+    public Candidate register(@ModelAttribute CandidateCreationDto candidateCreationDto) throws IOException {
+        return candidateService.register(candidateCreationDto);
     }
 
     @GetMapping

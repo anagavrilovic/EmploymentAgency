@@ -1,24 +1,28 @@
 package com.example.employmentagencybackend.model;
 
 import com.example.employmentagencybackend.model.enums.EducationDegree;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SuppressWarnings("deprecation")
-@Document(indexName = CandidateIndexUnit.INDEX_NAME, shards = 1, replicas = 0)
+@Document(indexName = CandidateIndexUnit.INDEX_NAME)
 public class CandidateIndexUnit {
 
     public static final String INDEX_NAME = "candidates";
+
+    @Id
+    @Field(type = FieldType.Long, store = true)
+    protected Long id;
 
     @Field(type = FieldType.Text, store = true)
     private String firstName;
@@ -26,21 +30,22 @@ public class CandidateIndexUnit {
     @Field(type = FieldType.Text, store = true)
     private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @Field(type = FieldType.Text, store = true)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
-
-    @Column(nullable = false)
+    @Field(type = FieldType.Text, store = true)
     private String phoneNumber;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Field(type = FieldType.Text, store = true)
     private EducationDegree educationDegree;
 
-    private String cv;
+    @Field(type = FieldType.Text, store = true)
+    private String cvContent;
 
-    private String motivationalLetter;
+    @Field(type = FieldType.Text, store = true)
+    private String motivationalLetterContent;
+
+    @Field(type = FieldType.Nested, includeInParent = true)
+    private Address address;
+
 }

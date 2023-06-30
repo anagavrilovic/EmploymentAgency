@@ -8,7 +8,7 @@ import classes from './Search.module.css';
 
 function Search() {
 
-    const [mandatorySearchInput, setMandatorySearchInput] = useState({text: "", parameter: ""});
+    const [mandatorySearchInput, setMandatorySearchInput] = useState({text: "", parameter: "", select: false});
     const [optionalSearchInputs, setOptionalSearchInputs] = useState([]);
 
     //useEffect(() => { console.log(mandatorySearchInput) }, [mandatorySearchInput])
@@ -24,7 +24,17 @@ function Search() {
     }
 
     function handleSelectMandatorySearchField(event) {
-        setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value});
+        if(event.target.value === "EducationDegree"){
+            setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value, "select": true, "text": ""});
+        } else if (mandatorySearchInput.select) {
+            setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value, "select": false, "text": ""});
+        } else {
+            setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value, "select": false});
+        }
+    }
+
+    function handleMandatoryEducationDegreeSelect(event) {
+        setMandatorySearchInput({...mandatorySearchInput, "text": event.target.value});
     }
 
     function handleSelectOperation(event, searchInput, index) {
@@ -39,9 +49,23 @@ function Search() {
         setOptionalSearchInputs(newArray);
     }
 
+    function handleOptionalEducationDegreeSelect(event, searchInput, index) {
+        let newArray = [...optionalSearchInputs]; 
+        newArray[index] = {...searchInput, "text": event.target.value }; 
+        setOptionalSearchInputs(newArray);
+    }
+
     function handleSelectOptionalSearchField(event, searchInput, index) {
         let newArray = [...optionalSearchInputs]; 
-        newArray[index] = {...searchInput, "parameter": event.target.value }; 
+
+        if(event.target.value === "EducationDegree") {
+            newArray[index] = {...searchInput, "parameter": event.target.value, "select": true, "text": "" }; 
+        } else if(searchInput.select) {
+            newArray[index] = {...searchInput, "parameter": event.target.value, "select": false, "text": ""}; 
+        } else {
+            newArray[index] = {...searchInput, "parameter": event.target.value, "select": false}; 
+        }
+        
         setOptionalSearchInputs(newArray);
     }
 
@@ -55,7 +79,8 @@ function Search() {
             id: uuidv4(),
             operation: "AND",
             text: "",
-            parameter: ""
+            parameter: "",
+            select: false
         }; 
         console.log(newField);
 
@@ -68,7 +93,8 @@ function Search() {
     }
 
     function handleClickSearch() {
-        
+        console.log(mandatorySearchInput);
+        console.log(optionalSearchInputs);
     }
 
     return (
@@ -86,7 +112,23 @@ function Search() {
 
                 <div className={classes.form}>
                     <div className={classes.mandatorySearchParam}>
-                        <input type="text" value={mandatorySearchInput.text} className={classes.mandatorySearchInput} onChange={handleMandatorySearchInputChange}/>
+                        {
+                            mandatorySearchInput.select ? 
+                            <select name="EducationDegreeSelect" defaultValue={mandatorySearchInput.text} className={classes.mandatoryEducationDegreeSelect}
+                                onChange={handleMandatoryEducationDegreeSelect} >
+                                <option value="" disabled>Choose Education Degree</option>
+                                <option value="PRIMARY_SCHOOL_4_GRADES" > Primary school - 4 grades </option>
+                                <option value="PRIMARY_SCHOOL_8_GRADES" > Primary school - 8 grades </option>
+                                <option value="HIGH_SCHOOL_3_YEARS" > High school - 3 years </option>
+                                <option value="HIGH_SCHOOL_4_YEARS" > High school - 4 years </option>
+                                <option value="COLLEGE_3_YEARS" > College - 3 years </option>
+                                <option value="COLLEGE_4_YEARS" > College - 4 years </option>
+                                <option value="MASTERS" > Masters </option>
+                                <option value="PH_D" > PhD </option>
+                            </select>
+                            :
+                            <input type="text" value={mandatorySearchInput.text} className={classes.mandatorySearchInput} onChange={handleMandatorySearchInputChange}/>
+                        }
                         <select name="Field" defaultValue={mandatorySearchInput.parameter} className={classes.mandatorySearchSelect} onChange={handleSelectMandatorySearchField} >
                             <option value="" disabled>Choose Parameter</option>
                             <option value="FirstName" >First Name</option>
@@ -103,8 +145,25 @@ function Search() {
                                 <option value="AND" >AND</option>
                                 <option value="OR" >OR</option>
                             </select>
-                            <input type="text" value={s.text} 
-                                className={classes.optionalSearchInput} onChange={e => handleOptionalSearchInputChange(e, s, index)}/>
+                            {
+                                s.select ?
+                                <select name="EducationDegreeSelect" defaultValue={s.text} className={classes.optionalEducationDegreeSelect}
+                                    onChange={e => handleOptionalEducationDegreeSelect(e, s, index)} >
+                                    <option value="" disabled>Choose Education Degree</option>
+                                    <option value="PRIMARY_SCHOOL_4_GRADES" > Primary school - 4 grades </option>
+                                    <option value="PRIMARY_SCHOOL_8_GRADES" > Primary school - 8 grades </option>
+                                    <option value="HIGH_SCHOOL_3_YEARS" > High school - 3 years </option>
+                                    <option value="HIGH_SCHOOL_4_YEARS" > High school - 4 years </option>
+                                    <option value="COLLEGE_3_YEARS" > College - 3 years </option>
+                                    <option value="COLLEGE_4_YEARS" > College - 4 years </option>
+                                    <option value="MASTERS" > Masters </option>
+                                    <option value="PH_D" > PhD </option>
+                                </select>
+                                :
+                                <input type="text" value={s.text} 
+                                    className={classes.optionalSearchInput} onChange={e => handleOptionalSearchInputChange(e, s, index)}/>
+                            }
+                            
                             <select name="Field" defaultValue={s.parameter} className={classes.optionalSearchSelect} onChange={e => handleSelectOptionalSearchField(e, s, index)} >
                                 <option value="" disabled>Choose Parameter</option>
                                 <option value="FirstName" >First Name</option>

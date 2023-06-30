@@ -8,9 +8,7 @@ import com.example.employmentagencybackend.repository.CandidateRepository;
 import com.example.employmentagencybackend.service.AmazonS3Service;
 import com.example.employmentagencybackend.service.CandidateIndexingService;
 import com.example.employmentagencybackend.service.CandidateService;
-import com.example.employmentagencybackend.service.PdfReaderService;
 import com.example.employmentagencybackend.util.PDFReader;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,10 +42,8 @@ public class CandidateServiceImpl implements CandidateService {
         assertCandidateNotExists(candidateCreationDto);
         assertFilesNotEmpty(candidateCreationDto);
 
-        //String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
-        //String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
-        String cvFullPath = "";
-        String motivationalLetterFullPath = "";
+        String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
+        String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
 
         Candidate candidate = save(candidateCreationDto, cvFullPath, motivationalLetterFullPath);
 

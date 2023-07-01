@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
+import { axiosInstance } from '../../api/AxiosInstance';
 
 import classes from './Search.module.css';
 
 function Search() {
 
-    const [mandatorySearchInput, setMandatorySearchInput] = useState({text: "", parameter: "", select: false});
+    const [mandatorySearchInput, setMandatorySearchInput] = useState({value: "", field: "", select: false});
     const [optionalSearchInputs, setOptionalSearchInputs] = useState([]);
 
     const navigate = useNavigate();
@@ -18,50 +19,50 @@ function Search() {
     }
 
     function handleMandatorySearchInputChange(event) {
-        setMandatorySearchInput({...mandatorySearchInput, "text": event.target.value});
+        setMandatorySearchInput({...mandatorySearchInput, value: event.target.value});
     }
 
     function handleSelectMandatorySearchField(event) {
-        if(event.target.value === "EducationDegree"){
-            setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value, "select": true, "text": ""});
+        if(event.target.value === "educationDegree"){
+            setMandatorySearchInput({...mandatorySearchInput, field: event.target.value, select: true, value: ""});
         } else if (mandatorySearchInput.select) {
-            setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value, "select": false, "text": ""});
+            setMandatorySearchInput({...mandatorySearchInput, field: event.target.value, select: false, value: ""});
         } else {
-            setMandatorySearchInput({...mandatorySearchInput, "parameter": event.target.value, "select": false});
+            setMandatorySearchInput({...mandatorySearchInput, field: event.target.value, select: false});
         }
     }
 
     function handleMandatoryEducationDegreeSelect(event) {
-        setMandatorySearchInput({...mandatorySearchInput, "text": event.target.value});
+        setMandatorySearchInput({...mandatorySearchInput, value: event.target.value});
     }
 
     function handleSelectOperation(event, searchInput, index) {
         let newArray = [...optionalSearchInputs]; 
-        newArray[index] = {...searchInput, "operation": event.target.value }; 
+        newArray[index] = {...searchInput, logicalOperation: event.target.value }; 
         setOptionalSearchInputs(newArray);
     }
 
     function handleOptionalSearchInputChange(event, searchInput, index) {
         let newArray = [...optionalSearchInputs]; 
-        newArray[index] = {...searchInput, "text": event.target.value }; 
+        newArray[index] = {...searchInput, value: event.target.value }; 
         setOptionalSearchInputs(newArray);
     }
 
     function handleOptionalEducationDegreeSelect(event, searchInput, index) {
         let newArray = [...optionalSearchInputs]; 
-        newArray[index] = {...searchInput, "text": event.target.value }; 
+        newArray[index] = {...searchInput, value: event.target.value }; 
         setOptionalSearchInputs(newArray);
     }
 
     function handleSelectOptionalSearchField(event, searchInput, index) {
         let newArray = [...optionalSearchInputs]; 
 
-        if(event.target.value === "EducationDegree") {
-            newArray[index] = {...searchInput, "parameter": event.target.value, "select": true, "text": "" }; 
+        if(event.target.value === "educationDegree") {
+            newArray[index] = {...searchInput, field: event.target.value, select: true, value: "" }; 
         } else if(searchInput.select) {
-            newArray[index] = {...searchInput, "parameter": event.target.value, "select": false, "text": ""}; 
+            newArray[index] = {...searchInput, field: event.target.value, select: false, value: ""}; 
         } else {
-            newArray[index] = {...searchInput, "parameter": event.target.value, "select": false}; 
+            newArray[index] = {...searchInput, field: event.target.value, select: false}; 
         }
         
         setOptionalSearchInputs(newArray);
@@ -75,9 +76,9 @@ function Search() {
     function handleClickAddField() {
         var newField = {
             id: uuidv4(),
-            operation: "AND",
-            text: "",
-            parameter: "",
+            logicalOperation: "AND",
+            value: "",
+            field: "",
             select: false
         }; 
         console.log(newField);
@@ -86,13 +87,26 @@ function Search() {
     }
 
     function handleClickClearFields() {
-        setMandatorySearchInput({text: "", parameter: ""});
+        setMandatorySearchInput({value: "", field: ""});
         setOptionalSearchInputs([]);
     }
 
     function handleClickSearch() {
         console.log(mandatorySearchInput);
         console.log(optionalSearchInputs);
+
+        if (optionalSearchInputs.length === 0) {
+            axiosInstance.post("/search", {
+                field: mandatorySearchInput.field,
+                value: mandatorySearchInput.value
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        }
     }
 
     return (
@@ -112,7 +126,7 @@ function Search() {
                     <div className={classes.mandatorySearchParam}>
                         {
                             mandatorySearchInput.select ? 
-                            <select name="EducationDegreeSelect" defaultValue={mandatorySearchInput.text} className={classes.mandatoryEducationDegreeSelect}
+                            <select name="EducationDegreeSelect" defaultValue={mandatorySearchInput.value} className={classes.mandatoryEducationDegreeSelect}
                                 onChange={handleMandatoryEducationDegreeSelect} >
                                 <option value="" disabled>Choose Education Degree</option>
                                 <option value="PRIMARY_SCHOOL_4_GRADES" > Primary school - 4 grades </option>
@@ -125,27 +139,27 @@ function Search() {
                                 <option value="PH_D" > PhD </option>
                             </select>
                             :
-                            <input type="text" value={mandatorySearchInput.text} className={classes.mandatorySearchInput} onChange={handleMandatorySearchInputChange}/>
+                            <input type="text" value={mandatorySearchInput.value} className={classes.mandatorySearchInput} onChange={handleMandatorySearchInputChange}/>
                         }
-                        <select name="Field" defaultValue={mandatorySearchInput.parameter} className={classes.mandatorySearchSelect} onChange={handleSelectMandatorySearchField} >
-                            <option value="" disabled>Choose Parameter</option>
-                            <option value="FirstName" >First Name</option>
-                            <option value="LastName" >Last Name</option>
-                            <option value="EducationDegree" >Education Degree</option>
-                            <option value="CV" >CV</option>
-                            <option value="MotivationalLetter">Motivational Letter</option>
+                        <select name="Field" defaultValue={mandatorySearchInput.field} className={classes.mandatorySearchSelect} onChange={handleSelectMandatorySearchField} >
+                            <option value="" disabled>Choose Field</option>
+                            <option value="firstName" >First Name</option>
+                            <option value="lastName" >Last Name</option>
+                            <option value="educationDegree" >Education Degree</option>
+                            <option value="cvContent" >CV</option>
+                            <option value="motivationalLetterContent">Motivational Letter</option>
                         </select>
                     </div>
 
                     {optionalSearchInputs.map((s, index) => ( 
                         <div className={classes.optionalSearchParam} key={index}> 
-                            <select name="Operation" defaultValue={s.operation} className={classes.operationSelect} onChange={e => handleSelectOperation(e, s, index)} >
+                            <select name="Operation" defaultValue={s.logicalOperation} className={classes.operationSelect} onChange={e => handleSelectOperation(e, s, index)} >
                                 <option value="AND" >AND</option>
                                 <option value="OR" >OR</option>
                             </select>
                             {
                                 s.select ?
-                                <select name="EducationDegreeSelect" defaultValue={s.text} className={classes.optionalEducationDegreeSelect}
+                                <select name="EducationDegreeSelect" defaultValue={s.value} className={classes.optionalEducationDegreeSelect}
                                     onChange={e => handleOptionalEducationDegreeSelect(e, s, index)} >
                                     <option value="" disabled>Choose Education Degree</option>
                                     <option value="PRIMARY_SCHOOL_4_GRADES" > Primary school - 4 grades </option>
@@ -158,17 +172,17 @@ function Search() {
                                     <option value="PH_D" > PhD </option>
                                 </select>
                                 :
-                                <input type="text" value={s.text} 
+                                <input type="text" value={s.value} 
                                     className={classes.optionalSearchInput} onChange={e => handleOptionalSearchInputChange(e, s, index)}/>
                             }
                             
-                            <select name="Field" defaultValue={s.parameter} className={classes.optionalSearchSelect} onChange={e => handleSelectOptionalSearchField(e, s, index)} >
-                                <option value="" disabled>Choose Parameter</option>
-                                <option value="FirstName" >First Name</option>
-                                <option value="LastName" >Last Name</option>
-                                <option value="EducationDegree" >Education Degree</option>
-                                <option value="CV" >CV</option>
-                                <option value="MotivationalLetter">Motivational Letter</option>
+                            <select name="Field" defaultValue={s.field} className={classes.optionalSearchSelect} onChange={e => handleSelectOptionalSearchField(e, s, index)} >
+                                <option value="" disabled>Choose Field</option>
+                                <option value="firstName" >First Name</option>
+                                <option value="lastName" >Last Name</option>
+                                <option value="educationDegree" >Education Degree</option>
+                                <option value="cvContent" >CV</option>
+                                <option value="motivationalLetterContent">Motivational Letter</option>
                             </select>
                             <button className={classes.removeOptionalSearch} onClick={() => handleClickRemoveOptional(s)}>X</button>
                         </div> ) 

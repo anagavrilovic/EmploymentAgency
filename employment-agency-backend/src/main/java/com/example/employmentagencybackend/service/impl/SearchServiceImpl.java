@@ -6,14 +6,13 @@ import com.example.employmentagencybackend.model.CandidateIndexUnit;
 import com.example.employmentagencybackend.repository.CandidateIndexRepository;
 import com.example.employmentagencybackend.service.SearchService;
 import lombok.AllArgsConstructor;
-import org.apache.lucene.util.QueryBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,10 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchServiceImpl implements SearchService {
 
+    private final ElasticsearchOperations elasticsearchOperations;
+
     private final CandidateIndexRepository candidateIndexRepository;
 
-    private ElasticsearchOperations elasticsearchOperations;
 
     @Override
     public List<SearchResult> search(SearchQuery query) {

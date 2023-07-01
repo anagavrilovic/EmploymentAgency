@@ -4,6 +4,7 @@ import com.example.employmentagencybackend.model.Candidate;
 import com.example.employmentagencybackend.model.CandidateIndexUnit;
 import com.example.employmentagencybackend.repository.CandidateIndexRepository;
 import com.example.employmentagencybackend.service.CandidateIndexingService;
+import com.example.employmentagencybackend.service.GeocodingService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -17,8 +18,12 @@ public class CandidateIndexingServiceImpl implements CandidateIndexingService {
 
     private final CandidateIndexRepository candidateIndexRepository;
 
+    private final GeocodingService geocodingService;
+
     @Override
     public String addCandidate(Candidate candidate, String cvContent, String motivationalLetterContent) {
+        candidate.getAddress().setLocation(geocodingService.getGeoPointOfCity(candidate.getAddress().getCity()));
+
         CandidateIndexUnit candidateIndexUnit = CandidateIndexUnit.builder()
                 .id(candidate.getId())
                 .firstName(candidate.getFirstName())

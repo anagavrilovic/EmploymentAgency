@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faPhone, faGraduationCap, faLocationDot, faQuoteLeft } from '@fortawesome/free-solid-svg-icons';
 
-import { axiosInstance, baseUrl } from '../../api/AxiosInstance';
+import { baseUrl } from '../../api/AxiosInstance';
 
 function SearchResult({searchResult}) {
 

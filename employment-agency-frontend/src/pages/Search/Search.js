@@ -14,6 +14,7 @@ function Search() {
 
     const [mandatorySearchInput, setMandatorySearchInput] = useState({value: "", field: "", select: false});
     const [optionalSearchInputs, setOptionalSearchInputs] = useState([]);
+    const [geoSearch, setGeoSearch] = useState({city: "", radiusInKm: undefined});
 
     const [searchResults, setSearchResults] = useState(null);
 
@@ -97,6 +98,7 @@ function Search() {
     }
 
     function handleClickSearch() {
+        setGeoSearch({city: "", radiusInKm: undefined});
 
         var searchQuery = [{
             field: mandatorySearchInput.field,
@@ -128,6 +130,32 @@ function Search() {
             })
         })
 
+    }
+
+    function handleGeoSearchInputCityChange(event) {
+        setGeoSearch({...geoSearch, city: event.target.value});
+    }
+
+    function handleGeoSearchInputRadiusChange(event) {
+        setGeoSearch({...geoSearch, radiusInKm: event.target.value});
+    }
+
+    function handleClickSearchGeo() {
+        handleClickClearFields();
+        console.log(geoSearch);
+
+        axiosInstance.post("/search/geo", geoSearch)
+        .then(response => {
+            setSearchResults(response.data);
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.response.data.message,
+                confirmButtonColor: '#d5bf86'
+            })
+        })
     }
 
     return (
@@ -216,6 +244,16 @@ function Search() {
                     </div>
 
                     <button className={classes.searchButton} onClick={handleClickSearch}>Search</button>
+                </div>
+
+                <div className={classes.formGeo}>
+                    <div className={classes.geoSearchInputs}>
+                        <input type="text" className={classes.geoSearchInput} placeholder="Enter city..."
+                            value={geoSearch.city} onChange={handleGeoSearchInputCityChange}/>
+                        <input type="number" className={classes.geoSearchInput} placeholder="Enter radius distance in km..."
+                            value={geoSearch.radiusInKm} onChange={handleGeoSearchInputRadiusChange}/>
+                    </div>
+                    <button className={classes.searchButton} onClick={handleClickSearchGeo}>Geo Search</button>
                 </div>
 
                 {

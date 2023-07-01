@@ -1,5 +1,6 @@
 package com.example.employmentagencybackend.controller;
 
+import com.example.employmentagencybackend.dto.GeoQuery;
 import com.example.employmentagencybackend.dto.SearchQuery;
 import com.example.employmentagencybackend.dto.SearchResult;
 import com.example.employmentagencybackend.service.SearchService;
@@ -22,5 +23,10 @@ public class SearchController {
     @PostMapping
     public List<SearchResult> multiSearch(@RequestBody List<SearchQuery> query) {
         return searchService.search(query);
+    }
+
+    @PostMapping("/geo")
+    public List<SearchResult> geoSearch(@RequestBody GeoQuery geoQuery) {
+        return searchService.geospatialSearch(geoQuery);
     }
 }

@@ -73,7 +73,6 @@
 .mandatorySearchParam {
     display: flex;
     justify-content: space-between;
-    margin-right: 1.5rem;
     margin-bottom: 1rem;
 }
 
@@ -81,6 +80,7 @@
     display: flex;
     justify-content: space-between;
 
+    margin-right: -1.5rem;
     margin-bottom: 1rem;
 }
 
@@ -195,4 +195,39 @@ select:focus {
     cursor: pointer;
     font-weight: bold;
     font-size: 1.1rem;
+}
+
+.formGeo {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+}
+
+.geoSearchInputs { 
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+::placeholder { 
+    color: rgb(145, 130, 98);
+}
+
+.geoSearchInput {
+    width: 47.5%;
+
+    background-color: rgba(219, 209, 185, 0.7);
+
+    border: 2px solid transparent;
+    border-top: 3px solid transparent;
+    border-bottom: 1px solid rgba(114, 91, 37, 0.7);
+
+    height: 2rem;
+    font-size: 1rem;
+    padding-left: 1rem;
+    font-family: inherit;
+
+    color: rgb(84, 68, 24);
+
+    margin-bottom: 1rem;
 }

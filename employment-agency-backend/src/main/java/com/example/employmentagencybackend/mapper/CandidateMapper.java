@@ -11,11 +11,14 @@ public class CandidateMapper {
                 .firstName(candidateCreationDto.getFirstName())
                 .lastName(candidateCreationDto.getLastName())
                 .email(candidateCreationDto.getEmail())
-                .address(new Address(candidateCreationDto.getStreetName(),
-                        candidateCreationDto.getStreetNumber(),
-                        candidateCreationDto.getPostalCode(),
-                        candidateCreationDto.getCity(),
-                        candidateCreationDto.getCountry()))
+                .address(Address.builder()
+                        .streetName(candidateCreationDto.getStreetName())
+                        .streetNumber(candidateCreationDto.getStreetNumber())
+                        .city(candidateCreationDto.getCity())
+                        .country(candidateCreationDto.getCountry())
+                        .postalCode(candidateCreationDto.getPostalCode())
+                        .location(null)
+                        .build())
                 .phoneNumber(candidateCreationDto.getPhoneNumber())
                 .educationDegree(candidateCreationDto.getEducationDegree())
                 .build();

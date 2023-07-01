@@ -38,7 +38,7 @@ public class CandidateIndexUnit {
     @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String phoneNumber;
 
-    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
+    @Field(type = FieldType.Keyword)
     private EducationDegree educationDegree;
 
     @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)

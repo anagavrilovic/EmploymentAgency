@@ -6,11 +6,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { axiosInstance } from '../../api/AxiosInstance';
 
 import classes from './Search.module.css';
+import SearchResults from '../../components/SearchResults/SearchResults';
+
+import Swal from 'sweetalert2'
 
 function Search() {
 
     const [mandatorySearchInput, setMandatorySearchInput] = useState({value: "", field: "", select: false});
     const [optionalSearchInputs, setOptionalSearchInputs] = useState([]);
+
+    const [searchResults, setSearchResults] = useState(null);
 
     const navigate = useNavigate();
 
@@ -110,12 +115,17 @@ function Search() {
 
         console.log(searchQuery);
 
-        axiosInstance.post("/search/multi-search", searchQuery)
+        axiosInstance.post("/search", searchQuery)
         .then(response => {
-            console.log(response);
+            setSearchResults(response.data);
         })
         .catch(error => {
-            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.response.data.message,
+                confirmButtonColor: '#d5bf86'
+            })
         })
 
     }
@@ -207,6 +217,10 @@ function Search() {
 
                     <button className={classes.searchButton} onClick={handleClickSearch}>Search</button>
                 </div>
+
+                {
+                    searchResults ? <SearchResults searchResults={searchResults} /> : null
+                }
             </div>
         </div>
     )

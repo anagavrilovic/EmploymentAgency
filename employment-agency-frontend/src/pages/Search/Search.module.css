@@ -5,17 +5,22 @@
     height: 100vh;
 
     background: url('../../images/1.jpg') center/cover;
+    background-attachment: fixed;
 }
 
 .background {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 5rem);
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
     background-color: rgba(165, 146, 94, 0.85);
+
+    padding-bottom: 5rem;
+    overflow-y: scroll;
+
 }
 
 .title {
@@ -45,11 +50,12 @@
 
     font-size: 1rem;
     font-family: inherit;
+
+    cursor: pointer;
 }
 
-.backToHomeButton:hover {
-    cursor: pointer;
-    
+.backToHomeButton:hover,
+.backToHomeButton:active {
     border-color: rgb(255, 255, 255, 0.7);
     color: rgb(255, 255, 255, 0.7);
     background-color: rgba(165, 146, 94, 0.3);
@@ -167,6 +173,8 @@ select:focus {
     background-color: rgba(165, 146, 94, 0.9);
 
     cursor: pointer;
+
+    margin-bottom: 3rem;
 }
 
 .searchButton:hover,

@@ -1,0 +1,28 @@
+.component {
+    width: 55%;
+}
+
+.title {
+    font-size: 1.6rem;
+    color: white;
+    font-style: inherit;
+    margin: 2rem 0;
+}
+
+.list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.searchResults {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.label {
+    color: white;
+}

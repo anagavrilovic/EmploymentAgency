@@ -51,6 +51,7 @@ public class SearchServiceImpl implements SearchService {
     private HighlightBuilder.Field[] getHiglightFields(List<SearchQuery> query) {
         return query.stream()
                 .map(q -> new HighlightBuilder.Field(q.getField()))
+                .distinct()
                 .toArray(HighlightBuilder.Field[]::new);
     }
 

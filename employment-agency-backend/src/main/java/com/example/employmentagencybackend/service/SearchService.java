@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface SearchService {
 
-    List<SearchResult> search(SearchQuery query);
-
-    List<SearchResult> booleanSearch(List<SearchQuery> query);
+    List<SearchResult> search(List<SearchQuery> query);
 
 }

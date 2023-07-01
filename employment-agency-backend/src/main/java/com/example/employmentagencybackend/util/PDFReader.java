@@ -1,6 +1,5 @@
 package com.example.employmentagencybackend.util;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.web.multipart.MultipartFile;

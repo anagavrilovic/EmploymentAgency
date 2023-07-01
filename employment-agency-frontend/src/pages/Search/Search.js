@@ -92,21 +92,32 @@ function Search() {
     }
 
     function handleClickSearch() {
-        console.log(mandatorySearchInput);
-        console.log(optionalSearchInputs);
 
-        if (optionalSearchInputs.length === 0) {
-            axiosInstance.post("/search", {
-                field: mandatorySearchInput.field,
-                value: mandatorySearchInput.value
+        var searchQuery = [{
+            field: mandatorySearchInput.field,
+            value: mandatorySearchInput.value,
+            isPhrase: mandatorySearchInput.value.startsWith("^") && mandatorySearchInput.value.endsWith("^")
+        }];
+
+        optionalSearchInputs.forEach(input => {
+            searchQuery.push({
+                field: input.field,
+                value: input.value,
+                isPhrase: input.value.startsWith("^") && input.value.endsWith("^"),
+                logicalOperation: input.logicalOperation
             })
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        }
+        });
+
+        console.log(searchQuery);
+
+        axiosInstance.post("/search/multi-search", searchQuery)
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
     }
 
     return (

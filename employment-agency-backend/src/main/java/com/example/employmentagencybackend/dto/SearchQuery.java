@@ -15,5 +15,6 @@ public class SearchQuery {
     private LogicalOperation logicalOperation;
     private String field;
     private String value;
+    private Boolean isPhrase;
 
 }

@@ -10,19 +10,21 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.io.Serializable;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(indexName = CandidateIndexUnit.INDEX_NAME)
+@Document(indexName = CandidateIndexUnit.INDEX_NAME, shards = 1, replicas = 0)
 public class CandidateIndexUnit {
 
     public static final String INDEX_NAME = "candidates";
 
     @Id
     @Field(type = FieldType.Long, store = true)
-    protected Long id;
+    private Long id;
 
     @Field(type = FieldType.Text, store = true)
     private String firstName;

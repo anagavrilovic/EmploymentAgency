@@ -42,8 +42,10 @@ public class CandidateServiceImpl implements CandidateService {
         assertCandidateNotExists(candidateCreationDto);
         assertFilesNotEmpty(candidateCreationDto);
 
-        String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
-        String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
+        //String cvFullPath = uploadFileToS3(candidateCreationDto.getCv(), CVS_DIRECTORY);
+        //String motivationalLetterFullPath = uploadFileToS3(candidateCreationDto.getMotivationalLetter(), MOTIVATIONAL_LETTERS_DIRECTORY);
+        String cvFullPath = "";
+        String motivationalLetterFullPath = "";
 
         Candidate candidate = save(candidateCreationDto, cvFullPath, motivationalLetterFullPath);
 

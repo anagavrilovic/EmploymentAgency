@@ -10,8 +10,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.io.Serializable;
-
 
 @Data
 @NoArgsConstructor
@@ -22,32 +20,34 @@ public class CandidateIndexUnit {
 
     public static final String INDEX_NAME = "candidates";
 
+    public static final String SERBIAN_ANALYZER = "serbian";
+
     @Id
-    @Field(type = FieldType.Long, store = true)
+    @Field(type = FieldType.Long, store = true, analyzer = SERBIAN_ANALYZER)
     private Long id;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String firstName;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String lastName;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String email;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String phoneNumber;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private EducationDegree educationDegree;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String cvContent;
 
-    @Field(type = FieldType.Text, store = true)
+    @Field(type = FieldType.Text, store = true, analyzer = SERBIAN_ANALYZER)
     private String motivationalLetterContent;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
+    @Field(type = FieldType.Nested, includeInParent = true, analyzer = SERBIAN_ANALYZER)
     private Address address;
 
 }

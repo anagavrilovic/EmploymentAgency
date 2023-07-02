@@ -16,7 +16,7 @@ function Homepage() {
     }
 
     function goToCandidatesPage() {
-        navigate("/candidates");
+        navigate("/statistics");
     }
  
     return (
@@ -42,7 +42,7 @@ function Homepage() {
                 <p className={classes.optionQuoteHighlight}> POSSIBILITIES </p>
                 <p className={classes.optionQuote}> start here </p>
                 <button className={`${classes.optionButton} ${classes.optionRightButton}`} onClick={goToCandidatesPage}>
-                    BROWSE CANDIDATES
+                    SEE STATISTICS
                 </button>
             </div>
         </div>

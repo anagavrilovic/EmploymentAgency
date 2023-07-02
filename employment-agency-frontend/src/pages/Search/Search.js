@@ -93,7 +93,7 @@ function Search() {
     }
 
     function handleClickClearFields() {
-        setMandatorySearchInput({value: "", field: ""});
+        setMandatorySearchInput({...mandatorySearchInput, field: "", select: false, value: ""});
         setOptionalSearchInputs([]);
     }
 

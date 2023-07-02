@@ -64,7 +64,7 @@
     display: flex;
 }
 
-::placeholder { 
+.formItem input::placeholder { 
     color: rgb(206, 191, 193);
  }
 

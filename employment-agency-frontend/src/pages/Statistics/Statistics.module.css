@@ -16,6 +16,8 @@
     align-items: center;
 
     background-color: rgb(141, 119, 95, 0.85);
+
+    overflow-y: scroll;
 }
 
 .title {
@@ -52,4 +54,15 @@
     border-color: rgb(255, 255, 255, 0.7);
     color: rgb(255, 255, 255, 0.7);
     background-color: rgb(141, 119, 95, 0.3);
+}
+
+.statistics {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 3rem;
+}
+
+.statisticsTitle {
+    color: white;
 }

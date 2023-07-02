@@ -21,7 +21,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @PostMapping
-    public List<SearchResult> multiSearch(@RequestBody List<SearchQuery> query) {
+    public List<SearchResult> search(@RequestBody List<SearchQuery> query) {
         return searchService.search(query);
     }
 

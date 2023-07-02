@@ -10,3 +10,18 @@ services:
       - POSTGRES_DB=employment-agency
     ports:
       - '5432:5432'
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.8.1
+    container_name: logstash
+    restart: always
+    ports:
+      - "5000:5000"
+      - "5044:5044"
+      - "9600:9600"
+    environment:
+      - XPACK_MONITORING_ELASTICSEARCH_HOSTS=http://host.docker.internal:9200
+      - XPACK_MONITORING_ENABLED=true
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./employment-agency-backend/logs/elklogs.log:/usr/share/logstash/data/elklogs.log

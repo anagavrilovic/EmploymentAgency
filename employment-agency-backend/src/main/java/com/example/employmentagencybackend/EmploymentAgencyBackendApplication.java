@@ -15,7 +15,7 @@ public class EmploymentAgencyBackendApplication {
 
 		SpringApplication.run(EmploymentAgencyBackendApplication.class, args);
 
-		List<String> cities = List.of("Beograd", "Novi Sad", "Niš", "Kragujevac", "Šabac");
+		/*List<String> cities = List.of("Beograd", "Novi Sad", "Niš", "Kragujevac", "Šabac");
 		List<String> employees = List.of("mikamikic", "jocajocic", "zikazikic");
 		List<String> companies = List.of("Google", "Microsoft", "Apple", "Amazon", "Facebook");
 
@@ -34,7 +34,7 @@ public class EmploymentAgencyBackendApplication {
 		for(int i = 0; i < 80; i++) {
 			int randomNumber = new Random().nextInt(5);
 			loggingService.logNewEmployeeForCompany(companies.get(randomNumber));
-		}
+		}*/
 	}
 
 }
